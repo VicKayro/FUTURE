@@ -3,13 +3,29 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, Zap, Eye, Users } from "lucide-react";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const HeroSection = () => {
   const [email, setEmail] = useState("");
 
-  const handleJoinBeta = () => {
-    console.log("Joining beta with email:", email);
-    // Handle beta signup logic
+  const handleJoinBeta = async () => {
+    if (!email.includes('@')) return;
+    
+    try {
+      const { error } = await supabase
+        .from('beta_signups')
+        .insert({ email });
+      
+      if (error) {
+        console.error('Error signing up for beta:', error);
+        return;
+      }
+      
+      setEmail("");
+      console.log("Successfully signed up for beta:", email);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
