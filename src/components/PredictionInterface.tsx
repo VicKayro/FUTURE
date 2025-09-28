@@ -82,14 +82,10 @@ export const PredictionInterface = () => {
     setIsLoading(true);
     
     try {
-      let fileContent = null;
       let fileName = null;
       
       // Handle file upload if present
       if (uploadedFile) {
-        const fileBuffer = await uploadedFile.arrayBuffer();
-        const fileText = new TextDecoder().decode(fileBuffer);
-        fileContent = fileText;
         fileName = uploadedFile.name;
         
         // Upload file to storage
@@ -110,7 +106,6 @@ export const PredictionInterface = () => {
           user_id: user.id,
           question: question.trim(),
           file_name: fileName,
-          file_content: fileContent,
           status: 'processing'
         })
         .select()
@@ -125,7 +120,6 @@ export const PredictionInterface = () => {
         body: {
           predictionId: prediction.id,
           question: question.trim(),
-          fileContent,
           fileName
         }
       });
